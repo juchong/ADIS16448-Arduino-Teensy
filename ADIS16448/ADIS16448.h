@@ -125,6 +125,7 @@ private:
   int _CS;
   int _DR;
   int _RST;
+  int _stall = 20;
 
 };
 

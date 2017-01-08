@@ -101,7 +101,7 @@ int16_t ADIS16448::regRead(uint8_t regAddr) {
   SPI.transfer(0x00); // Write 0x00 to the SPI bus fill the 16 bit transaction requirement
   digitalWrite(_CS, HIGH); // Set CS high to disable device
 
-  delayMicroseconds(40); // Delay to not violate read rate (16 us)
+  delayMicroseconds(_stall); // Delay to not violate read rate 
 
   // Read data from requested register
   digitalWrite(_CS, LOW); // Set CS low to enable device
@@ -109,7 +109,7 @@ int16_t ADIS16448::regRead(uint8_t regAddr) {
   uint8_t _lsbData = SPI.transfer(0x00); // Send (0x00) and place lower byte into variable
   digitalWrite(_CS, HIGH); // Set CS high to disable device
 
-  delayMicroseconds(40); // Delay to not violate read rate (16 us)
+  delayMicroseconds(_stall); // Delay to not violate read rate 
   
   int16_t _dataOut = (_msbData << 8) | (_lsbData & 0xFF); // Concatenate upper and lower bytes
   // Shift MSB data left by 8 bits, mask LSB data with 0xFF, and OR both bits.
@@ -137,19 +137,21 @@ int ADIS16448::regWrite(uint8_t regAddr, int16_t regData) {
   uint8_t highBytelowWord = (lowWord >> 8);
   uint8_t lowBytelowWord = (lowWord & 0xFF);
 
-  // Write highWord to SPI bus
+  // Write low word to SPI bus
   digitalWrite(_CS, LOW); // Set CS low to enable device
-  SPI.transfer(highBytehighWord); // Write high byte from high word to SPI bus
-  SPI.transfer(lowBytehighWord); // Write low byte from high word to SPI bus
+  SPI.transfer(highBytelowWord); // Write high byte from high word to SPI bus
+  SPI.transfer(lowBytelowWord); // Write low byte from high word to SPI bus
   digitalWrite(_CS, HIGH); // Set CS high to disable device
 
-  delayMicroseconds(40); // Delay to not violate read rate (16 us)
+  delayMicroseconds(_stall); // Delay to not violate read rate 
 
-  // Write lowWord to SPI bus
+  // Write high word to SPI bus
   digitalWrite(_CS, LOW); // Set CS low to enable device
-  SPI.transfer(highBytelowWord); // Write high byte from low word to SPI bus
-  SPI.transfer(lowBytelowWord); // Write low byte from low word to SPI bus
+  SPI.transfer(highBytehighWord); // Write high byte from low word to SPI bus
+  SPI.transfer(lowBytehighWord); // Write low byte from low word to SPI bus
   digitalWrite(_CS, HIGH); // Set CS high to disable device
+
+  delayMicroseconds(_stall); // Delay to not violate read rate 
 
   return(1);
 }
