@@ -131,24 +131,18 @@ int ADIS16448::regWrite(uint8_t regAddr, int16_t regData) {
   uint16_t lowWord = (addr | (regData & 0xFF)); // OR Register address (A) with data(D) (AADD)
   uint16_t highWord = ((addr | 0x100) | ((regData >> 8) & 0xFF)); // OR Register address with data and increment address
 
-  // Split words into chars
-  uint8_t highBytehighWord = (highWord >> 8);
-  uint8_t lowBytehighWord = (highWord & 0xFF);
-  uint8_t highBytelowWord = (lowWord >> 8);
-  uint8_t lowBytelowWord = (lowWord & 0xFF);
-
   // Write low word to SPI bus
   digitalWrite(_CS, LOW); // Set CS low to enable device
-  SPI.transfer(highBytelowWord); // Write high byte from high word to SPI bus
-  SPI.transfer(lowBytelowWord); // Write low byte from high word to SPI bus
+  SPI.transfer(lowWord >> 8); // Write high byte from high word to SPI bus
+  SPI.transfer(lowWord & 0xFF); // Write low byte from high word to SPI bus
   digitalWrite(_CS, HIGH); // Set CS high to disable device
 
   delayMicroseconds(_stall); // Delay to not violate read rate 
 
   // Write high word to SPI bus
   digitalWrite(_CS, LOW); // Set CS low to enable device
-  SPI.transfer(highBytehighWord); // Write high byte from low word to SPI bus
-  SPI.transfer(lowBytehighWord); // Write low byte from low word to SPI bus
+  SPI.transfer(highWord >> 8); // Write high byte from low word to SPI bus
+  SPI.transfer(highWord & 0xFF); // Write low byte from low word to SPI bus
   digitalWrite(_CS, HIGH); // Set CS high to disable device
 
   delayMicroseconds(_stall); // Delay to not violate read rate 
