@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  September 2016
+//  November 2017
 //  Author: Juan Jose Chong <juan.chong@analog.com>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  ADIS16448.cpp
@@ -154,15 +154,17 @@ int ADIS16448::regWrite(uint8_t regAddr, int16_t regData) {
 // Intiates a burst read with checksum from the sensor.
 // Returns a pointer to an array of sensor data. 
 ////////////////////////////////////////////////////////////////////////////
-// No inputs required.
+// chkFlag - 0 = ignore checksum, 1 = read checksum from burst
 ////////////////////////////////////////////////////////////////////////////
-int16_t *ADIS16448::burstRead(void) {
-	uint8_t burstdata[26];
-	static int16_t burstwords[13];
+uint8_t *ADIS16448::byteBurst(uint8_t chkFlag) {
+
+  static uint8_t burstdata[26];
+
 	// Trigger Burst Read
 	digitalWrite(_CS, LOW);
 	SPI.transfer(0x3E);
 	SPI.transfer(0x00);
+
 	// Read Burst Data
 	burstdata[0] = SPI.transfer(0x00); //DIAG_STAT
 	burstdata[1] = SPI.transfer(0x00);
@@ -188,24 +190,53 @@ int16_t *ADIS16448::burstRead(void) {
   burstdata[21] = SPI.transfer(0x00);
   burstdata[22] = SPI.transfer(0x00); //TEMP_OUT
   burstdata[23] = SPI.transfer(0x00);
-  burstdata[24] = SPI.transfer(0x00); //CHECKSUM
-  burstdata[25] = SPI.transfer(0x00);
+
+  if (chkFlag == 1) {
+    burstdata[24] = SPI.transfer(0x00); //CHECKSUM
+    burstdata[25] = SPI.transfer(0x00);
+  }
+  
+
 	digitalWrite(_CS, HIGH);
 
-	// Join bytes into words
-	burstwords[0] = ((burstdata[0] << 8) | (burstdata[1] & 0xFF)); //DIAG_STAT
-	burstwords[1] = ((burstdata[2] << 8) | (burstdata[3] & 0xFF)); //XGYRO
-	burstwords[2] = ((burstdata[4] << 8) | (burstdata[5] & 0xFF)); //YGYRO
-	burstwords[3] = ((burstdata[6] << 8) | (burstdata[7] & 0xFF)); //ZGYRO
-	burstwords[4] = ((burstdata[8] << 8) | (burstdata[9] & 0xFF)); //XACCEL
-	burstwords[5] = ((burstdata[10] << 8) | (burstdata[11] & 0xFF)); //YACCEL
-	burstwords[6] = ((burstdata[12] << 8) | (burstdata[13] & 0xFF)); //ZACCEL
-	burstwords[7] = ((burstdata[14] << 8) | (burstdata[15] & 0xFF)); //XMAG
-	burstwords[8] = ((burstdata[16] << 8) | (burstdata[17] & 0xFF)); //YMAG
-	burstwords[9] = ((burstdata[18] << 8) | (burstdata[19] & 0xFF)); //ZMAG
-  burstwords[10] = ((burstdata[20] << 8) | (burstdata[21] & 0xFF)); //BARO
-  burstwords[11] = ((burstdata[22] << 8) | (burstdata[23] & 0xFF)); //TEMP
-  burstwords[12] = ((burstdata[24] << 8) | (burstdata[25] & 0xFF)); //CHECKSUM
+  return burstdata;
+
+}
+
+////////////////////////////////////////////////////////////////////////////
+// Intiates a burst read with checksum from the sensor.
+// Returns a pointer to an array of sensor data. 
+////////////////////////////////////////////////////////////////////////////
+// chkFlag - 0 = ignore checksum, 1 = read checksum from burst
+////////////////////////////////////////////////////////////////////////////
+uint16_t *ADIS16448::wordBurst(uint8_t chkFlag) {
+
+  static uint16_t burstwords[13];
+
+  // Trigger Burst Read
+  digitalWrite(_CS, LOW);
+  SPI.transfer(0x3E);
+  SPI.transfer(0x00);
+
+  // Read Burst Data
+  burstwords[0] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //DIAG_STAT
+  burstwords[1] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //XGYRO
+  burstwords[2] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //YGYRO
+  burstwords[3] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //ZGYRO
+  burstwords[4] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //XACCEL
+  burstwords[5] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //YACCEL
+  burstwords[6] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //ZACCEL
+  burstwords[7] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //XMAG
+  burstwords[8] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //YMAG
+  burstwords[9] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //ZMAG
+  burstwords[10] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //BARO
+  burstwords[11] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //TEMP
+
+  if (chkFlag == 1) {
+    burstwords[12] = ((SPI.transfer(0x00) << 8) | (SPI.transfer(0x00) & 0xFF)); //CHECKSUM
+  }
+
+  digitalWrite(_CS, HIGH);
 
   return burstwords;
 

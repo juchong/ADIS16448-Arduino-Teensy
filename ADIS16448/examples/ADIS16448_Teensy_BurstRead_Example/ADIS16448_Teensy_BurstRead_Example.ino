@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  September 2016
+//  November 2017
 //  Author: Juan Jose Chong <juan.chong@analog.com>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  ADIS16448_Teensy_BurstRead_Example.ino
@@ -49,7 +49,7 @@
 
 // Initialize Variables
 // Temporary Data Array
-int16_t *burstData;
+uint16_t *burstData;
 
 // Accelerometer
 float AXS, AYS, AZS = 0;
@@ -101,7 +101,7 @@ void setup()
 void grabData()
 {
     IMU.configSPI(); // Configure SPI before the read. Useful when talking to multiple SPI devices
-    burstData = IMU.burstRead(); // Read data and insert into array
+    burstData = IMU.wordBurst(0); // Read data and insert into array
 }
 
 // Function used to scale all acquired data (scaling functions are included in ADIS16448.cpp)

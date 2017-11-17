@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//  September 2016
+//  November 2017
 //  Author: Juan Jose Chong <juan.chong@analog.com>
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  ADIS16448.h
@@ -102,8 +102,11 @@ public:
   // Write register
   int regWrite(uint8_t regAddr, int16_t regData);
 
-  // Read sensor data using a burst read
-  int16_t *burstRead(void);
+  // Read sensor data using a burst read. Returns bits
+  uint8_t *byteBurst(uint8_t chkFlag);
+
+  // Read sensor data using a burst read. Returns bytes
+  uint16_t *wordBurst(uint8_t chkFlag);
 
   // Scale accelerator data
   float accelScale(int16_t sensorData);
@@ -125,7 +128,7 @@ private:
   int _CS;
   int _DR;
   int _RST;
-  int _stall = 20;
+  int _stall = 10;
 
 };
 
