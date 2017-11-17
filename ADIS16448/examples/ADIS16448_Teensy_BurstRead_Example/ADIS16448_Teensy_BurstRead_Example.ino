@@ -137,7 +137,7 @@ void loop()
         // Print header
         Serial.println(" ");
         Serial.println("ADIS16448 Teensy Burst Read Example Program");
-        Serial.println("Juan Chong - September 2016");
+        Serial.println("Juan Chong - November 2017");
         Serial.println(" ");
 
         // Print control registers to the serial port
