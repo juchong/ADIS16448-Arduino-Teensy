@@ -8,6 +8,8 @@ This example library was written to give engineers, students, and makers a start
 - Functions for performing common routines such as resetting the sensor
 - Burst-mode data acquisition and checksum verification
 - Example Arduino sketches which synchronously read data from the sensor and write it to the serial port
+- An example program that will read data from the serial port and write it to a .csv file
+- CRC16 calculation examples written for MATLAB and LabVIEW
 
 ### What do I need to get started?
 
@@ -28,7 +30,7 @@ Be sure to restart the Arduino IDE to refresh the library directory!
 
 You'll need to build a cable to interface the sensor with the [ADIS16448/PCBZ](http://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/eval-adis16448.html#eb-overview). The image below shows a custom Teensy interface board for iSensors products.
 
-![ADIS16448-Teensy Interface Board](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/ADIS16448/images/interface_448.JPG)
+![ADIS16448-Teensy Interface Board](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/images/interface_448.JPG)
 
 Pin assignments for the Teensy can be found in the example sketch comments.
 
@@ -40,9 +42,10 @@ Once you have the sensor connected and have opened the **ADIS16448_Teensy_BurstR
 
 If everything is working, you should see a screen like this:
 
-![ADIS16448 Example PuTTY Output](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/ADIS16448/images/burst_demo_448.PNG)
+![ADIS16448 Example PuTTY Output](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/images/burst_demo_448.PNG)
 
 The demo software will only update the screen ~2 times/second, but every sample is being captured by the interrupt service routine.
 
 A single burst frame should look like this when viewed with a logic analyzer:
-![ADIS16448 Burst Frame](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/ADIS16448/images/burst_frame_capture_448.PNG)
+
+![ADIS16448 Burst Frame](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/images/burst_frame_capture_448.PNG)
