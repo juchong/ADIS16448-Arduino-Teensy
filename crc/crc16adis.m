@@ -29,7 +29,7 @@
 %   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%
 function crc = crc16adis(data)
 
 %Example Data (LSB-first) - Result should be 0x9AF4 (39668):
