@@ -8,6 +8,8 @@ This example library was written to give engineers, students, and makers a start
 - Functions for performing common routines such as resetting the sensor
 - Burst-mode data acquisition and checksum verification
 - Example Arduino sketches which synchronously read data from the sensor and write it to the serial port
+- An example program that will read data from the serial port and write it to a .csv file
+- CRC16 calculation examples written for MATLAB and LabVIEW
 
 ### What do I need to get started?
 
@@ -45,4 +47,5 @@ If everything is working, you should see a screen like this:
 The demo software will only update the screen ~2 times/second, but every sample is being captured by the interrupt service routine.
 
 A single burst frame should look like this when viewed with a logic analyzer:
+
 ![ADIS16448 Burst Frame](https://raw.githubusercontent.com/juchong/ADIS16448-Arduino-Teensy/master/images/burst_frame_capture_448.PNG)
