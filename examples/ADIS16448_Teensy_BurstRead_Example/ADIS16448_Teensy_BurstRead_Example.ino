@@ -189,7 +189,7 @@ void loop()
         // Print Status Registers
         Serial.print("DIAG_STAT: ");
         Serial.println((*(burstData + 0)));
-        Serial.print("CHECKSUM: ");
+        Serial.print("CRC-16: ");
         Serial.println((*(burstData + 9)));
  
 #ifdef DEBUG 
